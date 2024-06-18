@@ -1,9 +1,9 @@
 from bubblesort import bubblesort
+from bubblesort import _bubblesort
 from bubblesort import compare_and_swap
 
-def test_compare_and_swap():
+def test_compare_and_swap() -> None:
     '''Tests the compare_and_swap function from bubblesort.'''
-
     test_list_1 = [1, 5, 4, 6]
     test_index_1 = 1
     assert compare_and_swap(test_list_1, test_index_1)
@@ -26,25 +26,25 @@ def test_compare_and_swap():
 
     print("compare_and_swap tests passed")
 
-def test_bubblesort_iterations():
-    '''Tests if bubblesort algorithm by bubblesort function from bubblesort is being used correctly 
-    to sort input lists.'''
-
+def test_bubblesort_iterations() -> None:
+    '''
+    Tests if bubblesort algorithm by bubblesort function from bubblesort is being used correctly 
+    to sort input lists.
+    '''
     original_list = [2, 5, 0, 1, 2, 9]
 
     test_list_1 = original_list.copy()
-    bubblesort(test_list_1, 1)
+    _bubblesort(test_list_1, 1)
     assert test_list_1 == [2, 0, 1, 2, 5, 9], test_list_1
 
     test_list_2 = original_list.copy()
-    bubblesort(test_list_2, 2)
+    _bubblesort(test_list_2, 2)
     assert test_list_2 == [0, 1, 2, 2, 5, 9], test_list_2
 
     print("bubblesort iterations tests passed")
 
-def test_bubblesort():
+def test_bubblesort() -> None:
     '''Tests bubblesort function from bubble sort.'''
-
     test1 = []
     bubblesort(test1)
     assert test1 == [], test1
