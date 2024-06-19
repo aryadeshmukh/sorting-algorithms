@@ -55,11 +55,14 @@ class TestBubblesort:
         bubblesort(test)
         assert test == [], test
     
-    def test_sort_basic_list(self) -> None:
-        '''Tests bubblesort on basic list.'''
-        test = [2, 4, 1, 7, 5]
-        bubblesort(test)
-        assert test == [1, 2, 4, 5, 7], test
+    @pytest.mark.parametrize("test_input, expected", [
+        ([2, 4, 1, 7, 5], [1, 2, 4, 5, 7]),
+        ([4, 3, 2, 1], [1, 2, 3, 4]),
+        ([4, 0, -2, 13, 9], [-2, 0, 4, 9, 13])])
+    def test_sort_basic_lists(self, test_input: List[int], expected: List[int]) -> None:
+        '''Tests bubblesort on basic lists.'''
+        bubblesort(test_input)
+        assert test_input == expected, test_input
 
     def test_sort_repeating_list(self) -> None:
         '''Tests bubblesort on list containing only one unique element.'''
