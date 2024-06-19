@@ -1,74 +1,80 @@
+import pytest
+from typing import List
 from bubblesort import bubblesort
 from bubblesort import _bubblesort
 from bubblesort import compare_and_swap
 
-def test_compare_and_swap() -> None:
-    '''Tests the compare_and_swap function from bubblesort.'''
-    test_list_1 = [1, 5, 4, 6]
-    test_index_1 = 1
-    assert compare_and_swap(test_list_1, test_index_1)
-    assert test_list_1 == [1, 4, 5, 6], test_list_1
+class TestBubblesort:
+    @pytest.fixture
+    def dummy_list(self) -> List[int]:
+        return [1, 2, 3]
 
-    test_list_2 = [1, 2, 3]
-    test_index_2 = 0
-    assert not compare_and_swap(test_list_2, test_index_2)
-    assert test_list_2 == [1, 2, 3], test_list_2
-
-    test_list_3 = [1, 3, 7, 6, 0]
-    test_index_3 = 4
-    assert not compare_and_swap(test_list_3, test_index_3)
-    assert test_list_3 == [1, 3, 7, 6, 0], test_list_3
-
-    test_list_4 = [1, 2, 3]
-    test_index_4 = -1
-    assert not compare_and_swap(test_list_4, test_index_4)
-    assert test_list_4 == [1, 2, 3], test_list_4
-
-    print("compare_and_swap tests passed")
-
-def test_bubblesort_iterations() -> None:
-    '''
-    Tests if bubblesort algorithm by bubblesort function from bubblesort is being used correctly 
-    to sort input lists.
-    '''
-    original_list = [2, 5, 0, 1, 2, 9]
-
-    test_list_1 = original_list.copy()
-    _bubblesort(test_list_1, 1)
-    assert test_list_1 == [2, 0, 1, 2, 5, 9], test_list_1
-
-    test_list_2 = original_list.copy()
-    _bubblesort(test_list_2, 2)
-    assert test_list_2 == [0, 1, 2, 2, 5, 9], test_list_2
-
-    print("bubblesort iterations tests passed")
-
-def test_bubblesort() -> None:
-    '''Tests bubblesort function from bubble sort.'''
-    test1 = []
-    bubblesort(test1)
-    assert test1 == [], test1
-
-    test2 = [2, 4, 1, 7, 5]
-    bubblesort(test2)
-    assert test2 == [1, 2, 4, 5, 7], test2
-
-    test3 = [3, 3, 3, 3]
-    bubblesort(test3)
-    assert test3 == [3, 3, 3, 3], test3
-
-    test4 = [1, 2, 3, 4]
-    bubblesort(test4)
-    assert test4 == [1, 2, 3, 4], test4
+    def test_compare_and_swap_execute_swap(self) -> None:
+        '''Tests compare_and_swap when specified values are in incorrect order.'''
+        test_list = [1, 5, 4, 6]
+        test_index = 1
+        assert compare_and_swap(test_list, test_index)
+        assert test_list == [1, 4, 5, 6], test_list
     
-    test5 = [6]
-    bubblesort(test5)
-    assert test5 == [6], test5
+    def test_compare_and_swap_no_swap(self, dummy_list) -> None:
+        '''Tests compare_and_swap when specified values are in correct order.'''
+        test_index = 0
+        assert not compare_and_swap(dummy_list, test_index)
+        assert dummy_list == [1, 2, 3], dummy_list
     
-    print("bubblesort tests passed")
+    def test_compare_and_swap_index_out_or_range(self) -> None:
+        '''Tests compare_and_swap when index is out or range.'''
+        test_list = [1, 3, 7, 6, 0]
+        test_index = 4
+        assert not compare_and_swap(test_list, test_index)
+        assert test_list == [1, 3, 7, 6, 0], test_list
+    
+    def test_compare_and_swap_negative_index(self, dummy_list: List[int]) -> None:
+        '''Tests compare_and_swap when index is negative.'''
+        test_index = -1
+        assert not compare_and_swap(dummy_list, test_index)
+        assert dummy_list == [1, 2, 3], dummy_list
+    
+    @pytest.fixture(scope="class")
+    def iterations_list(self) -> List[int]:
+        return [2, 5, 0, 1, 2, 9]
+    
+    def test_bubblesort_one_iteration(self, iterations_list: List[int]) -> None:
+        '''Tests first iteration of bubblesort.'''
+        _bubblesort(iterations_list, 1)
+        assert iterations_list == [2, 0, 1, 2, 5, 9], iterations_list
+    
+    def test_bubblesort_next_iteration(self, iterations_list: List[int]) -> None:
+        '''Tests next iterations of bubblesort on result from test_bubblesort_one_iteration.'''
+        _bubblesort(iterations_list, 1)
+        assert iterations_list == [0, 1, 2, 2, 5, 9], iterations_list
+    
+    def test_sort_empty_list(self) -> None:
+        '''Tests bubblesort on empty list.'''
+        test = []
+        bubblesort(test)
+        assert test == [], test
+    
+    def test_sort_basic_list(self) -> None:
+        '''Tests bubblesort on basic list.'''
+        test = [2, 4, 1, 7, 5]
+        bubblesort(test)
+        assert test == [1, 2, 4, 5, 7], test
 
-print()
-test_compare_and_swap()
-test_bubblesort_iterations()
-test_bubblesort()
-print()
+    def test_sort_repeating_list(self) -> None:
+        '''Tests bubblesort on list containing only one unique element.'''
+        test = [3, 3, 3, 3]
+        bubblesort(test)
+        assert test == [3, 3, 3, 3], test
+    
+    def test_already_sorted_list(self) -> None:
+        '''Tests bubblesort on already sorted list.'''
+        test = [1, 2, 3, 4]
+        bubblesort(test)
+        assert test == [1, 2, 3, 4], test
+
+    def test_length_one_list(self) -> None:
+        '''Tests bubblesort on a list with only one element.'''
+        test = [6]
+        bubblesort(test)
+        assert test == [6], test
